@@ -1,0 +1,25 @@
+From 15e0cac1523696eac5e9c09b8447429457ff6901 Mon Sep 17 00:00:00 2001
+From: Badlop <badlop@process-one.net>
+Date: Wed, 25 Jul 2012 13:02:21 +0200
+Subject: [PATCH 09/12] On shutdown, first stop listeners, then modules
+ (thanks to Vishal Xica)(EJAB-1566)
+
+---
+ src/ejabberd_app.erl | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/ejabberd_app.erl b/src/ejabberd_app.erl
+index ea467cb..3550f58 100644
+--- a/src/ejabberd_app.erl
++++ b/src/ejabberd_app.erl
+@@ -78,6 +78,7 @@ start(_, _) ->
+ %% This function is called when an application is about to be stopped,
+ %% before shutting down the processes of the application.
+ prep_stop(State) ->
++    ejabberd_listener:stop_listeners(),
+     stop_modules(),
+     ejabberd_admin:stop(),
+     broadcast_c2s_shutdown(),
+-- 
+1.7.12.1
+

@@ -1,0 +1,12 @@
+diff --git a/lib/mkmf.rb b/lib/mkmf.rb
+index 06aeca9..4bf12d3 100644
+--- a/lib/mkmf.rb
++++ b/lib/mkmf.rb
+@@ -349,6 +349,7 @@ def create_tmpsrc(src)
+ end
+ 
+ def have_devel?
++  $have_devel = true
+   unless defined? $have_devel
+     $have_devel = true
+     $have_devel = try_link(MAIN_DOES_NOTHING)

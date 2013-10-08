@@ -1,0 +1,88 @@
+============
+CherryPy 2.x
+============
+
+CherryPy 2.x for Fedora is being provided so that apps written for
+TurboGears 1.x can continue to run.  It relies on eggs to enable multiple
+versions to be installed.
+
+If you are using CherryPy via TurboGears, everything should work out of the
+box for new projects quickstarted with the Fedora 8 packages.  Existing projects
+will need a small adjustment to run correctly.  In your project's start-APP.py
+script you need to change the commands that import TurboGears from this::
+
+  import pkg_resources
+  pkg_resources.require('TurboGears')
+
+to this::
+
+  __requires__ = 'TurboGears'
+  import pkg_resources
+
+with the packages provided by Fedora 8+.
+
+If you are using CherryPY via your own code and absolutely must use the 2.x
+version rather than 3.x, you will need to do one of the following to make it
+work in your code:
+
+1) Manually change your python path to place the egg directory before
+   site-packages.  Note that if you do it this way you will either have to
+   change your code whenever a new version comes out (for instance, if a
+   bugfix release, CherryPy-2.3.1, is released.)  The code would look
+   something like this::
+
+     import sys, os
+     from distutils.sysconfig import get_python_lib
+     compatCherryPyPath = os.path.join(
+            get_python_lib(), 'CherryPy-2.3.0-py2.5.egg')
+     sys.path.insert(0, compatCherryPyPath)
+     import cherrypy
+
+2) Use setuptools and entrypoints. To do this you have a function in a python
+   module that is your main function.  You define this as an entry point in
+   setup.py.  For instance, if you wanted your script to be called
+   "nifty-foo" and the entry point was the main() function in the module
+   nifty.foo, you would use this in setup.py::
+
+     # List the versions of CherryPy that will work
+     install_requires = [
+        'CherryPy >= 2.2,<3.0alpha'
+        ]
+     # Add the information necessary to create the script that requires
+     # the CherryPy version
+     setup (
+        name='Nifty',
+        version='1.0',
+        entry_points = '''
+          [console_scripts]
+          nifty-foo = nifty.foo:main
+        ''',
+     [...]
+
+   When you use setup.py to install this script it will create a script that
+   looks like this::
+
+      #!/usr/bin/python
+      __requires__ = 'Nifty==1.0'
+      import sys
+      from pkg_resources import load_entry_point
+
+      sys.exit(
+        load_entry_point('Nifty==1.0', 'console_scripts', 'nifty-foo')()
+      )
+
+   The script in turn, references the egg metadata for your module which
+   lists the dependency from Nifty to CherryPy>=2.2, < 3.0alpha.
+
+Note that although there may be other methods of making this work in some
+circumstances, these are the only methods that the setuptools author and
+we are able to say will work in all circumstances in this environment.  Other
+methods may not work reliably in some versions of setuptools.
+
+In particular, if you have both the python-cherrypy (at version 3.x) and
+python-cherrypy2 packages installed, this will not work::
+
+  from pkg_resources import require
+  require("CherryPy>=2.3,<3.0alpha")
+  import cherrypy
+  print cherrypy.__version__

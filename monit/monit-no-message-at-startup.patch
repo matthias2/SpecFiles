@@ -1,0 +1,14 @@
+diff -Naur monit-5.5.orig/src/monit.c monit-5.5/src/monit.c
+--- monit-5.5.orig/src/monit.c	2012-05-10 20:52:38.000000000 +0000
++++ monit-5.5/src/monit.c	2012-09-05 20:38:20.222419178 +0000
+@@ -529,10 +529,6 @@
+                         exit(0);
+ 
+                 Run.once = FALSE;
+-                if (can_http())
+-                        LogInfo("Starting %s daemon with http interface at [%s:%d]\n", prog, Run.bind_addr?Run.bind_addr:"*", Run.httpdport);
+-                else
+-                        LogInfo("Starting %s daemon\n", prog);
+ 
+                 if (Run.startdelay)
+                         LogInfo("Monit start delay set -- pause for %ds\n", Run.startdelay);

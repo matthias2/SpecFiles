@@ -1,0 +1,42 @@
+From e04d73120c0b236acb26816e0464b1cd79d2c0bd Mon Sep 17 00:00:00 2001
+From: Badlop <badlop@process-one.net>
+Date: Mon, 27 Aug 2012 16:38:52 +0200
+Subject: [PATCH 10/12] Added clause so ejabberdctl number of arguments error
+ report works with R15
+
+---
+ src/ejabberd_ctl.erl | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/src/ejabberd_ctl.erl b/src/ejabberd_ctl.erl
+index ceb4c34..01b07ea 100644
+--- a/src/ejabberd_ctl.erl
++++ b/src/ejabberd_ctl.erl
+@@ -292,6 +292,7 @@ call_command([CmdString | Args], Auth, AccessCommands) ->
+ 		    Result = ejabberd_commands:execute_command(AccessCommands, Auth, Command,
+ 							       ArgsFormatted),
+ 		    format_result(Result, ResultFormat);
++		%% This case clause is for Erlang R14 and older
+ 		{'EXIT', {function_clause,[{lists,zip,[A1, A2]} | _]}} ->
+ 		    {NumCompa, TextCompa} =
+ 			case {length(A1), length(A2)} of
+@@ -300,6 +301,16 @@ call_command([CmdString | Args], Auth, AccessCommands) ->
+ 			end,
+ 		    {io_lib:format("Error: the command ~p requires ~p ~s.",
+ 				   [CmdString, NumCompa, TextCompa]),
++		     wrong_command_arguments};
++		%% This case clause is for Erlang R15 and newer
++		{'EXIT', {function_clause,[{lists,zip,[A1, A2],_} | _]}} ->
++		    {NumCompa, TextCompa} =
++			case {length(A1), length(A2)} of
++			    {L1, L2} when L1 < L2 -> {L2-L1, "less argument"};
++			    {L1, L2} when L1 > L2 -> {L1-L2, "more argument"}
++			end,
++		    {io_lib:format("Error: the command ~p requires ~p ~s.",
++				   [CmdString, NumCompa, TextCompa]),
+ 		     wrong_command_arguments}
+ 	    end
+     end.
+-- 
+1.7.12.1
+

@@ -1,0 +1,12 @@
+diff -up CherryPy-2.3.0/cherrypy/test/webtest.py.broken_tests CherryPy-2.3.0/cherrypy/test/webtest.py
+--- CherryPy-2.3.0/cherrypy/test/webtest.py.broken_tests	2010-07-28 18:31:14.000000000 +0200
++++ CherryPy-2.3.0/cherrypy/test/webtest.py	2010-07-28 18:31:53.000000000 +0200
+@@ -485,7 +485,7 @@ def openURL(url, headers=None, method="G
+                                 skip_accept_encoding=True)
+             
+             for key, value in headers:
+-                conn.putheader(key, value)
++                conn.putheader(key, str(value))
+             conn.endheaders()
+             
+             if body is not None:

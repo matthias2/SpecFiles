@@ -1,0 +1,59 @@
+From 6ce4398360d5bab4322eb1ca93550c0cb553f94e Mon Sep 17 00:00:00 2001
+From: Badlop <badlop@process-one.net>
+Date: Mon, 27 Aug 2012 17:40:01 +0200
+Subject: [PATCH 11/12] Log IP address when auth attempt fails (thanks to Zach
+ Calvert)
+
+---
+ src/ejabberd_c2s.erl | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/src/ejabberd_c2s.erl b/src/ejabberd_c2s.erl
+index 038d3c5..8e4a7b6 100644
+--- a/src/ejabberd_c2s.erl
++++ b/src/ejabberd_c2s.erl
+@@ -564,10 +564,11 @@ wait_for_auth({xmlstreamelement, El}, StateData) ->
+ 			    fsm_next_state_pack(session_established,
+                                                 NewStateData);
+ 			_ ->
++			    IP = peerip(StateData#state.sockmod, StateData#state.socket),
+ 			    ?INFO_MSG(
+-			       "(~w) Failed legacy authentication for ~s",
++			       "(~w) Failed legacy authentication for ~s from IP ~s (~w)",
+ 			       [StateData#state.socket,
+-				jlib:jid_to_string(JID)]),
++				jlib:jid_to_string(JID), jlib:ip_to_list(IP), IP]),
+ 			    Err = jlib:make_error_reply(
+ 				    El, ?ERR_NOT_AUTHORIZED),
+ 			    send_element(StateData, Err),
+@@ -654,10 +655,11 @@ wait_for_feature_request({xmlstreamelement, El}, StateData) ->
+ 				   StateData#state{
+ 				     sasl_state = NewSASLState});
+ 		{error, Error, Username} ->
++		    IP = peerip(StateData#state.sockmod, StateData#state.socket),
+ 		    ?INFO_MSG(
+-		       "(~w) Failed authentication for ~s@~s",
++		       "(~w) Failed authentication for ~s@~s from IP ~s (~w)",
+ 		       [StateData#state.socket,
+-			Username, StateData#state.server]),
++			Username, StateData#state.server, jlib:ip_to_list(IP), IP]),
+ 		    send_element(StateData,
+ 				 {xmlelement, "failure",
+ 				  [{"xmlns", ?NS_SASL}],
+@@ -807,10 +809,11 @@ wait_for_sasl_response({xmlstreamelement, El}, StateData) ->
+ 		    fsm_next_state(wait_for_sasl_response,
+ 		     StateData#state{sasl_state = NewSASLState});
+ 		{error, Error, Username} ->
++		    IP = peerip(StateData#state.sockmod, StateData#state.socket),
+ 		    ?INFO_MSG(
+-		       "(~w) Failed authentication for ~s@~s",
++		       "(~w) Failed authentication for ~s@~s from IP ~s (~w)",
+ 		       [StateData#state.socket,
+-			Username, StateData#state.server]),
++			Username, StateData#state.server, jlib:ip_to_list(IP), IP]),
+ 		    send_element(StateData,
+ 				 {xmlelement, "failure",
+ 				  [{"xmlns", ?NS_SASL}],
+-- 
+1.7.12.1
+

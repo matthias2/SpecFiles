@@ -1,0 +1,11 @@
+diff -r 9768d97e85de uwsgiconfig.py
+--- a/uwsgiconfig.py	Sun May 20 20:51:46 2012 +0200
++++ b/uwsgiconfig.py	Tue Jun 26 22:33:08 2012 -0700
+@@ -899,7 +899,7 @@
+     except:
+         pass
+ 
+-    plugin_dest = uc.get('plugin_dir') + '/' + name + '_plugin'
++    plugin_dest = name + '_plugin'
+ 
+     shared_flag = '-shared'

@@ -1,0 +1,28 @@
+diff -up CherryPy-2.3.0/setup.py.bak CherryPy-2.3.0/setup.py
+--- CherryPy-2.3.0/setup.py.bak	2008-01-17 14:37:31.000000000 -0800
++++ CherryPy-2.3.0/setup.py	2008-01-17 14:38:06.000000000 -0800
+@@ -36,23 +36,11 @@ url="http://www.cherrypy.org"
+ cp_license="BSD"
+ packages=[
+     "cherrypy", "cherrypy.lib", "cherrypy.lib.filter",
+-    "cherrypy.tutorial", "cherrypy.test", "cherrypy.filters",
++    "cherrypy.filters",
+ ]
+ download_url="http://download.cherrypy.org/cherrypy/2.3.0/"
+ data_files=[
+-    ('cherrypy/tutorial',
+-        [
+-            'cherrypy/tutorial/tutorial.conf',
+-            'cherrypy/tutorial/README.txt',
+-            'cherrypy/tutorial/pdf_file.pdf',
+-            'cherrypy/tutorial/custom_error.html',
+-        ]
+-    ),
+     ('cherrypy', ['cherrypy/favicon.ico',]),
+-    ('cherrypy/test', ['cherrypy/test/style.css',]),
+-    ('cherrypy/test/static', ['cherrypy/test/static/index.html',
+-                              'cherrypy/test/static/has space.html',
+-                              'cherrypy/test/static/dirback.jpg',]),
+ ]
+ ###############################################################################
+ # end arguments for setup

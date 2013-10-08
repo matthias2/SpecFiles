@@ -1,0 +1,12 @@
+diff -Naur monit-5.4.orig/src/monit.h monit-5.4/src/monit.h
+--- monit-5.4.orig/src/monit.h	2012-05-06 09:40:45.000000000 +0000
++++ monit-5.4/src/monit.h	2012-08-10 19:06:21.882937942 +0000
+@@ -87,7 +87,7 @@
+ #include "util/StringBuffer.h"
+ 
+ 
+-#define MONITRC            "monitrc"
++#define MONITRC            "monit.conf"
+ #define TIMEFORMAT         "%Z %b %e %T"
+ #define STRERROR            strerror(errno)
+ #define STRLEN             256

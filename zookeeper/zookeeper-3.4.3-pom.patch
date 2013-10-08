@@ -1,0 +1,41 @@
+--- dist-maven/zookeeper-3.4.3.pom	2012-02-06 11:49:11.000000000 +0100
++++ dist-maven/zookeeper-3.4.3.pom-gil	2012-05-18 16:42:33.290759457 +0200
+@@ -10,7 +10,7 @@
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.apache.zookeeper</groupId>
+   <artifactId>zookeeper</artifactId>
+-  <packaging>pom</packaging>
++  <packaging>jar</packaging>
+   <version>3.4.3</version>
+   <dependencies>
+     <dependency>
+@@ -43,12 +43,12 @@
+       <version>3.2.2.Final</version>
+       <scope>compile</scope>
+     </dependency>
+-    <dependency>
++    <!--dependency>
+       <groupId>org.vafer</groupId>
+       <artifactId>jdeb</artifactId>
+       <version>0.8</version>
+       <optional>true</optional>
+-    </dependency>
++    </dependency-->
+     <dependency>
+       <groupId>junit</groupId>
+       <artifactId>junit</artifactId>
+@@ -57,12 +57,12 @@
+     </dependency>
+     <dependency>
+       <groupId>org.mockito</groupId>
+-      <artifactId>mockito-all</artifactId>
++      <artifactId>mockito-core</artifactId>
+       <version>1.8.2</version>
+       <scope>test</scope>
+     </dependency>
+     <dependency>
+-      <groupId>checkstyle</groupId>
++      <groupId>com.puppycrawl.tools</groupId>
+       <artifactId>checkstyle</artifactId>
+       <version>5.0</version>
+       <scope>test</scope>

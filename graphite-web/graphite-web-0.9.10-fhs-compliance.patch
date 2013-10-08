@@ -1,0 +1,42 @@
+diff -Naur graphite-web-0.9.10.orig/setup.cfg graphite-web-0.9.10/setup.cfg
+--- graphite-web-0.9.10.orig/setup.cfg	2012-05-31 06:28:54.000000000 +0000
++++ graphite-web-0.9.10/setup.cfg	2012-08-17 18:47:38.488649106 +0000
+@@ -1,6 +1,6 @@
+ [install]
+-prefix = /opt/graphite
+-install-lib = %(prefix)s/webapp
++#prefix = /usr/share/graphite-web
++#install-lib = /usr/share/graphite-web/webapp
+ 
+ [bdist_rpm]
+ requires = Django => 1.1.4
+diff -Naur graphite-web-0.9.10.orig/webapp/graphite/settings.py graphite-web-0.9.10/webapp/graphite/settings.py
+--- graphite-web-0.9.10.orig/webapp/graphite/settings.py	2012-05-31 20:30:23.000000000 +0000
++++ graphite-web-0.9.10/webapp/graphite/settings.py	2012-08-17 18:45:41.659691145 +0000
+@@ -28,21 +28,21 @@
+ JAVASCRIPT_DEBUG = False
+ 
+ # Filesystem layout
+-WEB_DIR = dirname( abspath(__file__) )
++WEB_DIR = '%PYTHON_SITELIB%/graphite/'
+ WEBAPP_DIR = dirname(WEB_DIR)
+ GRAPHITE_ROOT = dirname(WEBAPP_DIR)
+ THIRDPARTY_DIR = join(WEB_DIR,'thirdparty')
+ # Initialize additional path variables
+ # Defaults for these are set after local_settings is imported
+-CONTENT_DIR = ''
++CONTENT_DIR = '/usr/share/graphite-web/webapp/content'
+ CSS_DIR = ''
+-CONF_DIR = ''
++CONF_DIR = os.environ.get('GRAPHITE_CONF_DIR', '/etc/graphite/')
+ DASHBOARD_CONF = ''
+ GRAPHTEMPLATES_CONF = ''
+-STORAGE_DIR = ''
++STORAGE_DIR = os.environ.get('GRAPHITE_STORAGE_DIR', '/var/lib/graphite/storage/')
+ WHITELIST_FILE = ''
+ INDEX_FILE = ''
+-LOG_DIR = ''
++LOG_DIR = '/var/log/graphite/webapp/'
+ WHISPER_DIR = ''
+ RRD_DIR = ''
+ DATA_DIRS = []

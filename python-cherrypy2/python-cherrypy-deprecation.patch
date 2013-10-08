@@ -1,0 +1,50 @@
+Index: CherryPy-2.3.0/cherrypy/lib/cptools.py
+===================================================================
+--- CherryPy-2.3.0.orig/cherrypy/lib/cptools.py
++++ CherryPy-2.3.0/cherrypy/lib/cptools.py
+@@ -1,6 +1,8 @@
+ """Tools which both CherryPy and application developers may invoke."""
+-
+-import md5
++try:
++    from hashlib import md5
++except ImportError:
++    from md5 import new as md5
+ import mimetools
+ import mimetypes
+ mimetypes.init()
+@@ -99,7 +101,7 @@ def validate_etags(autotags=False):
+     if (not etag) and autotags:
+         if status == 200:
+             etag = response.collapse_body()
+-            etag = '"%s"' % md5.new(etag).hexdigest()
++            etag = '"%s"' % md5(etag).hexdigest()
+             response.headers['ETag'] = etag
+     
+     response.ETag = etag
+Index: CherryPy-2.3.0/cherrypy/filters/sessionfilter.py
+===================================================================
+--- CherryPy-2.3.0.orig/cherrypy/filters/sessionfilter.py
++++ CherryPy-2.3.0/cherrypy/filters/sessionfilter.py
+@@ -30,7 +30,11 @@ try:
+ except ImportError:
+     import pickle
+ import random
+-import sha
++try:
++    from hashlib import sha1
++except ImportError:
++    from sha import new as sha1
++
+ import time
+ import thread
+ import threading
+@@ -450,7 +454,7 @@ except (AttributeError, NotImplementedEr
+     # os.urandom not available until Python 2.4. Fall back to random.random.
+     def generate_session_id():
+         """Return a new session id."""
+-        return sha.new('%s' % random.random()).hexdigest()
++        return sha1('%s' % random.random()).hexdigest()
+ else:
+     def generate_session_id():
+         """Return a new session id."""

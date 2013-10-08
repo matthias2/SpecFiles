@@ -1,0 +1,27 @@
+--- CherryPy-2.3.0.orig/cherrypy/_cpwsgiserver.py	2008-01-14 12:20:11.000000000 +1000
++++ CherryPy-2.3.0.orig/cherrypy/_cpwsgiserver.py	2012-02-21 15:24:54.151563814 +1000
+@@ -204,13 +204,17 @@ 
+         self.wfile.flush()
+     
+     def terminate(self):
+-        if self.ready and not self.sent_headers and not self.server.interrupt:
+-            self.sent_headers = True
+-            self.send_headers()
+-        self.rfile.close()
+-        self.wfile.close()
+-        self.socket.close()
+-
++        try:
++            if self.ready and not self.sent_headers and not self.server.interrupt:
++                self.sent_headers = True
++                self.send_headers()
++            self.rfile.close()
++            self.wfile.close()
++            self.socket.close()
++        except socket.error, e:
++            errno = e.args[0]
++            if errno not in socket_errors_to_ignore:
++                traceback.print_exc()
+ 
+ _SHUTDOWNREQUEST = None
+ 
